@@ -1,0 +1,60 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Release.Name }}-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Release.Name }}-backend-vs
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - {{ .Release.Name }}-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /healthz
+      route:
+        - destination:
+            host: {{ .Release.Name }}-backend
+            port:
+              number: 6699
+      # Whitelist: only allow calls from dummy service
+      headers:
+        request:
+          add:
+            x-whitelisted: "true"
+      when:
+        - source:
+            principals: ["cluster.local/ns/{{ .Release.Namespace }}/sa/{{ .Release.Name }}-dummy"]
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Release.Name }}-dummy-vs
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - {{ .Release.Name }}-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /dummy
+      route:
+        - destination:
+            host: {{ .Release.Name }}-dummy
+            port:
+              number: 8081
