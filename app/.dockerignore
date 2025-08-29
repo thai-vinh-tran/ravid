@@ -1,0 +1,23 @@
+# Ignore Go build artifacts
+ravid
+*.out
+*.exe
+*.test
+
+# Dependency directories
+vendor/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git
+.gitignore
+
+# Logs
