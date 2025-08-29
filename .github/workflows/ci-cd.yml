@@ -36,3 +36,10 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ravid:${{ github.ref_name }}
           platforms: linux/amd64,linux/arm64
+
+      - name: Trigger ArgoCD Webhook
+        if: success()
+        run: |
+          curl -X POST "$ARGOCD_WEBHOOK_URL"
+        env:
+          ARGOCD_WEBHOOK_URL: ${{ secrets.ARGOCD_WEBHOOK_URL }}

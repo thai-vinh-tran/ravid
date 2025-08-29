@@ -1,3 +1,4 @@
 image:
   repository: "<your-dockerhub-username>/ravid"
+  # Tag must match semantic versioning: v1.2.3
   tag:

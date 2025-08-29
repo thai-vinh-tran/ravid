@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-backend
+  labels:
+    app: {{ .Release.Name }}-backend
 spec:
   selector:
     app: {{ .Release.Name }}-backend
@@ -9,3 +11,17 @@ spec:
     - protocol: TCP
       port: 6699
       targetPort: 6699
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-dummy
+  labels:
+    app: {{ .Release.Name }}-dummy
+spec:
+  selector:
+    app: {{ .Release.Name }}-dummy
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
