@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build-and-push:
@@ -34,5 +34,5 @@ jobs:
           context: ./app
           file: ./app/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ravid:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ravid:${{ github.ref_name }}
           platforms: linux/amd64,linux/arm64
